@@ -18,3 +18,17 @@
  - 요약을 위한 LLM 모델 정하기
  - 평가방법 정하기
  - 필요하다면, 대조군 만들기
+
+
+
+
+# mysql db 생성, 개발계정 발급, DB권한 부여
+CREATE DATABASE yanolja_db;
+use yanolja_db;
+-- 개발자 계정 만들기
+CREATE USER 'smile'@'localhost' IDENTIFIED BY '1234';
+CREATE USER 'smile'@'%' IDENTIFIED BY '1234';
+
+-- yanolja_db 접속 권한 부여
+GRANT ALL PRIVILEGES ON yanolja_db.* TO 'smile'@'localhost';
+GRANT ALL PRIVILEGES ON yanolja_db.* TO 'smile'@'%';
