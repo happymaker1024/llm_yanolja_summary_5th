@@ -13,6 +13,7 @@ from fastapi.templating import Jinja2Templates
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import RedirectResponse
 
+from schema import ReviewSummaryResponse
 from database import engine, sessionlocal
 from sqlalchemy.orm import Session
 import models
@@ -40,8 +41,31 @@ def get_db():
 
 @app.get("/")
 async def home(request: Request, db: Session = Depends(get_db)):
-    # todos = db.query(models.Todo).order_by(models.Todo.id.desc())
-    # print(todos.count())
+    accmmodation_list = db.query(models.AccommodationInfo.id, models.AccommodationInfo.name).all()
+    # accommodation_list = [{"id": item[0], "name": item[1]} for item in accommodation_list]
+    acc_list = []
+    for acc in accmmodation_list:
+        item = {}
+        # print(acc.id, acc.name)
+        item['id'] = acc.id
+        item['name'] = acc.name
+        acc_list.append(item)
+        print(acc_list)
     
-    return  0
+    return  acc_list
+
+@app.get("/review_summary/{id}")
+async def review_summary(request: Request, id: int , db: Session = Depends(get_db)):
+    # print(id)
     
+    # 폼에서 숙소 ID를 가져옴
+    review = db.query(models.ReviewSummary).filter(models.ReviewSummary.id == id).order_by(models.ReviewSummary.id.desc()).first()
+    # Pydantic 스키마 객체로 변환
+    review_response = ReviewSummaryResponse(
+            id=review.id,
+            accommodation_id=review.accommodation_id,
+            summary_good=review.summary_good,
+            summary_bad=review.summary_bad,
+            date=review.date,
+            )
+    return review_response
