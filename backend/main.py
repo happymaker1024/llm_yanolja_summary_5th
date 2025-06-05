@@ -24,7 +24,7 @@ models.Base.metadata.create_all(bind=engine)
 app = FastAPI()
 
 # html 템플릿 폴더를 지정하여 jinja템플릿 객체 생성
-templates = Jinja2Templates(directory="templates")
+# templates = Jinja2Templates(directory="templates")
 
 # static 폴더(정적파일 폴더)를 app에 연결
 app.mount("/static", StaticFiles(directory="static"), name="static")
